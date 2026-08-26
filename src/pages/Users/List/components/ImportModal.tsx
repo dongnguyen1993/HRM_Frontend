@@ -1,4 +1,4 @@
-import * as userService from '@/services/userService';
+import * as userService from '@/pages/Users/List/service';
 import { DownloadOutlined, InboxOutlined } from '@ant-design/icons';
 import { Alert, Button, message, Modal, Space, Upload } from 'antd';
 import React, { useState } from 'react';

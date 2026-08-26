@@ -3,7 +3,16 @@ import { TableFilterCard } from '@/components/TableFilterCard';
 import { DisconnectOutlined } from '@ant-design/icons';
 import { PageContainer, ProColumns } from '@ant-design/pro-components';
 import { request } from '@umijs/max';
-import { Button, Card, Col, DatePicker, Input, Popconfirm, Row, Space, Tag } from 'antd';
+import {
+  Button,
+  Card,
+  Col,
+  DatePicker,
+  Input,
+  Popconfirm,
+  Space,
+  Tag,
+} from 'antd';
 import React from 'react';
 import { useSignInLogs } from './hooks/useSignInLogs';
 import type { SignInLogItem } from './types';
@@ -29,15 +38,26 @@ export const SignInLogList: React.FC = () => {
       dataIndex: 'sessionStatus',
       width: 140,
       render: (status: number) => {
-        if (status === 1) return <Tag color="processing">🟢 Đang hoạt động</Tag>;
+        if (status === 1)
+          return <Tag color="processing">🟢 Đang hoạt động</Tag>;
         if (status === 0) return <Tag color="error">🔴 Đã Force Logout</Tag>;
         return <Tag color="default">⚪ Hết hạn Token</Tag>;
       },
     },
     { title: 'IP Address', dataIndex: 'ipAddress', width: 130 },
     { title: 'Thiết bị / Trình duyệt', dataIndex: 'userAgent', width: 220 },
-    { title: 'Thời gian Đăng nhập', dataIndex: 'createdAt', valueType: 'dateTime', width: 160 },
-    { title: 'Hạn phiên (Expires)', dataIndex: 'expiresAt', valueType: 'dateTime', width: 160 },
+    {
+      title: 'Thời gian Đăng nhập',
+      dataIndex: 'createdAt',
+      valueType: 'dateTime',
+      width: 160,
+    },
+    {
+      title: 'Hạn phiên (Expires)',
+      dataIndex: 'expiresAt',
+      valueType: 'dateTime',
+      width: 160,
+    },
     {
       title: 'Thao tác',
       key: 'actions',
@@ -47,12 +67,19 @@ export const SignInLogList: React.FC = () => {
         record.sessionStatus === 1 ? (
           <Popconfirm
             title="Đăng xuất bắt buộc phiên này?"
-            onConfirm={() => handleForceLogoutToken(record.tokenId, record.userCode)}
+            onConfirm={() =>
+              handleForceLogoutToken(record.tokenId, record.userCode)
+            }
             okText="Force Logout"
             cancelText="Hủy"
             okButtonProps={{ danger: true }}
           >
-            <Button size="small" type="primary" danger icon={<DisconnectOutlined />}>
+            <Button
+              size="small"
+              type="primary"
+              danger
+              icon={<DisconnectOutlined />}
+            >
               Force Logout
             </Button>
           </Popconfirm>
@@ -64,7 +91,6 @@ export const SignInLogList: React.FC = () => {
 
   return (
     <PageContainer title="Sign-in Logs (Lịch sử Đăng nhập & Quản lý Phiên)">
-      {/* 1. THANH LỌC TÌM KIẾM CÓ CHỌN KHOẢNG NGÀY THUẦN */}
       <TableFilterCard onSearch={handleSearch} onReset={handleReset}>
         <Col xs={24} sm={12} md={12}>
           <Space align="center" style={{ width: '100%' }}>
@@ -81,7 +107,9 @@ export const SignInLogList: React.FC = () => {
 
         <Col xs={24} sm={12} md={12}>
           <Space align="center" style={{ width: '100%' }}>
-            <span style={{ fontWeight: 500, minWidth: 110 }}>Khoảng thời gian:</span>
+            <span style={{ fontWeight: 500, minWidth: 110 }}>
+              Khoảng thời gian:
+            </span>
             <DatePicker.RangePicker
               style={{ width: '100%' }}
               value={dateRange}
@@ -92,13 +120,15 @@ export const SignInLogList: React.FC = () => {
         </Col>
       </TableFilterCard>
 
-      {/* 2. BẢNG HIỂN THỊ DỮ LIỆU SỬ DỤNG BASETABLE */}
       <Card size="small">
         <BaseTable<SignInLogItem>
           actionRef={tableRef}
           columns={columns}
           rowKey="tokenId"
           search={false}
+          // BỔ SUNG 2 DÒNG NÀY ĐỂ KÍCH HOẠT NÚT SHOW SQL
+          queryFile="SystemMgmt/SignInLogQueries"
+          queryKey="GetPagedSignInLogs"
           request={async (params) => {
             const queryParams: Record<string, any> = {
               pageNumber: params.current,

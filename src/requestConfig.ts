@@ -1,7 +1,7 @@
 import type { RequestConfig } from '@umijs/max';
 
 export const requestConfig: RequestConfig = {
-  timeout: 30000,
+  timeout: 300000,
   // Interceptor này sẽ được thực thi cho mỗi yêu cầu
   requestInterceptors: [
     (config: any) => {

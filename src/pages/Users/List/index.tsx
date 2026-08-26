@@ -142,6 +142,8 @@ export const UserList: React.FC = () => {
           columns={columns}
           rowKey="secureId"
           search={false}
+          queryFile="Users/UserQueries"
+          queryKey="GetPagedUsers"
           rowSelection={{
             selectedRowKeys,
             onChange: (keys, rows) => {

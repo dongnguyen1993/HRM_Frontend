@@ -1,4 +1,4 @@
-import * as userService from '@/services/userService';
+import * as userService from '@/pages/Users/List/service';
 import { UploadOutlined } from '@ant-design/icons';
 import {
   ModalForm,

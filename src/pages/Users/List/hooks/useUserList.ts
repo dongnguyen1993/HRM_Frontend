@@ -1,4 +1,4 @@
-import * as userService from '@/services/userService';
+import * as userService from '@/pages/Users/List/service';
 import { message, Modal } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import type { UserItem } from '../types';

@@ -80,12 +80,10 @@ export const CommonCodeList: React.FC = () => {
     { title: 'Update User', dataIndex: 'updatedBy', width: 120 },
   ];
 
-  // Kiểm tra nếu đang lọc danh sách Đã xóa (status === false) -> Bật nút BỎ XÓA màu xanh
   const isFilteringDeleted = filterStatus === false;
 
   return (
     <PageContainer title="Common Code (Quản lý Từ điển Dữ liệu Gốc)">
-      {/* 1. KHỐI TÌM KIẾM ĐỒNG NHẤT VỚI USER MANAGEMENT */}
       <TableFilterCard onSearch={handleSearch} onReset={handleReset}>
         <Col xs={24} sm={12} md={8}>
           <Space align="center" style={{ width: '100%' }}>
@@ -135,13 +133,15 @@ export const CommonCodeList: React.FC = () => {
         </Col>
       </TableFilterCard>
 
-      {/* 2. BẢNG DỮ LIỆU & TOOLBAR ACTION BAR */}
       <Card size="small">
         <BaseTable<CommonCodeItem>
           actionRef={tableRef}
           columns={columns}
           rowKey="codeId"
           search={false}
+          // BỔ SUNG 2 DÒNG NÀY ĐỂ KÍCH HOẠT NÚT SHOW SQL
+          queryFile="SystemMgmt/CommonCodeQueries"
+          queryKey="GetPagedCommonCodes"
           rowSelection={{
             selectedRowKeys,
             onChange: (keys, rows) => {
@@ -155,7 +155,7 @@ export const CommonCodeList: React.FC = () => {
                 key="restore"
                 icon={<UndoOutlined />}
                 disabled={selectedRowKeys.length === 0}
-                onClick={() => handleBulkDelete(1)} // Status = 1 (Khôi phục)
+                onClick={() => handleBulkDelete(1)}
                 style={{
                   backgroundColor: '#52c41a',
                   borderColor: '#52c41a',
@@ -169,8 +169,8 @@ export const CommonCodeList: React.FC = () => {
                 key="actions"
                 onAdd={handleAdd}
                 onEdit={handleEdit}
-                onDelete={() => handleBulkDelete(0)} // Status = 0 (Xóa mềm)
-                addText="Thêm mới"
+                onDelete={() => handleBulkDelete(0)}
+                addText="Thêm mới mã dùng chung"
                 selectedCount={selectedRowKeys.length}
               />
             ),
@@ -197,7 +197,6 @@ export const CommonCodeList: React.FC = () => {
         />
       </Card>
 
-      {/* MODAL THÊM / SỬA MÃ DÙNG CHUNG */}
       <Modal
         title={editingItem ? 'Sửa Mã Dùng Chung' : 'Thêm mới Mã Dùng Chung'}
         open={modalVisible}

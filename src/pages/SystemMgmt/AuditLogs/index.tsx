@@ -13,10 +13,9 @@ export const AuditLogList: React.FC = () => {
       title: 'STT',
       valueType: 'index',
       width: 60,
-      search: false,
+      hideInSearch: true,
       fixed: 'left',
     },
-    // Ô TÌM KIẾM CHUNG (MÃ NV / ĐƯỜNG DẪN API)
     {
       title: 'Từ khóa (User / API)',
       dataIndex: 'searchKeyword',
@@ -29,17 +28,16 @@ export const AuditLogList: React.FC = () => {
       title: 'Người thực hiện',
       dataIndex: 'operatorCode',
       width: 130,
-      search: false,
+      hideInSearch: true,
       fixed: 'left',
     },
-    // TÌM KIẾM THEO LOẠI HÀNH ĐỘNG
     {
       title: 'Hành động',
       dataIndex: 'action',
       width: 110,
       valueType: 'select',
       valueEnum: {
-        POST: { text: 'POST (Tạo/Xử lý)', status: 'Success' },
+        POST: { text: 'POST (Tạo mới/Xử lý)', status: 'Success' },
         PUT: { text: 'PUT (Cập nhật)', status: 'Warning' },
         DELETE: { text: 'DELETE (Xóa)', status: 'Error' },
       },
@@ -55,19 +53,12 @@ export const AuditLogList: React.FC = () => {
       title: 'API Endpoint / Path',
       dataIndex: 'tableName',
       width: 240,
-      search: false,
+      hideInSearch: true,
     },
-    {
-      title: 'IP Address',
-      dataIndex: 'ipAddress',
-      width: 130,
-      search: false, // BỎ Ô TÌM KIẾM BẰNG IP
-    },
-    // TÌM KIẾM THEO KHOẢNG NGÀY THUẦN (BỎ GIỜ / PHÚT / GIÂY)
     {
       title: 'Khoảng thời gian',
       dataIndex: 'dateRange',
-      valueType: 'dateRange', // DẠNG DATE RANGE CHỌN NGÀY CHUẨN ANTD
+      valueType: 'dateRange',
       hideInTable: true,
       fieldProps: {
         placeholder: ['Từ ngày', 'Đến ngày'],
@@ -78,13 +69,13 @@ export const AuditLogList: React.FC = () => {
       dataIndex: 'createdAt',
       valueType: 'dateTime',
       width: 170,
-      search: false,
+      hideInSearch: true,
     },
     {
       title: 'Chi tiết Body Payload',
       key: 'detail',
       width: 150,
-      search: false, // BỎ Ô TÌM KIẾM BẰNG BODY PAYLOAD
+      hideInSearch: true,
       render: (_, record) => (
         <a
           className="text-blue-500 font-bold cursor-pointer"
@@ -104,8 +95,10 @@ export const AuditLogList: React.FC = () => {
       <Card size="small">
         <BaseTable
           columns={columns}
+          // BỔ SUNG 2 DÒNG NÀY ĐỂ KÍCH HOẠT NÚT SHOW SQL
+          queryFile="SystemMgmt/AuditLogQueries"
+          queryKey="GetPagedAuditLogs"
           request={async (params) => {
-            // Mapping dữ liệu tìm kiếm truyền sang Backend API
             const queryParams: Record<string, any> = {
               pageNumber: params.current,
               pageSize: params.pageSize,
@@ -113,7 +106,6 @@ export const AuditLogList: React.FC = () => {
               action: params.action || '',
             };
 
-            // Tách mảng Ngày [Từ ngày, Đến ngày]
             if (params.dateRange && params.dateRange.length === 2) {
               queryParams.fromDate = params.dateRange[0];
               queryParams.toDate = params.dateRange[1];
