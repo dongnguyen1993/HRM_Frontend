@@ -38,11 +38,8 @@ export default defineConfig({
       ],
     },
 
-    // --- PHÂN HỆ DASHBOARD ---
-    // 1. Chuyển hướng mặc định về /home/personal
-    { path: '/', redirect: '/home/personal' },
-
-    // 2. Phân hệ HOME (Trang Chủ)
+    // --- PHÂN HỆ HOME (Trang Chủ) ---
+    // Chuyển hướng mặc định về /home/personal
     { path: '/', redirect: '/home/personal' },
 
     // --- PHÂN HỆ TRANG CHỦ (Đã đổi tên từ Dashboard -> Home) ---
@@ -54,12 +51,13 @@ export default defineConfig({
         {
           path: '/home/welcome',
           name: 'Welcome Analytics',
-          component: './Home/HomeAdmin', // CHỈNH SỬA TẠI ĐÂY: Trỏ đúng vào thư mục Home
+          component: './Home/HomeAdmin',
+          access: 'canAccessRoute',
         },
         {
           path: '/home/personal',
           name: 'User Dashboard',
-          component: './Home/HomeUser', // CHỈNH SỬA TẠI ĐÂY: Trỏ đúng vào thư mục Home
+          component: './Home/HomeUser',
         },
       ],
     },
@@ -74,36 +72,49 @@ export default defineConfig({
           path: '/system-mgmt/menu-management',
           name: 'Menu & Screen Management',
           component: './SystemMgmt/ProgramList',
+          access: 'canAccessRoute',
         },
         {
           path: '/system-mgmt/user-management',
           name: 'User Management',
           component: './Users/List',
+          access: 'canAccessRoute',
+        },
+        {
+          path: '/system-mgmt/user-import',
+          name: 'Import Users',
+          component: './Users/Import',
+          access: 'canAccessRoute',
         },
         {
           path: '/system-mgmt/permission-mapping',
           name: 'Permission Mapping',
           component: './Users/AuthorMapping',
+          access: 'canAccessRoute',
         },
         {
           path: '/system-mgmt/common-code',
           name: 'Common Code',
           component: './SystemMgmt/CommonCode',
+          access: 'canAccessRoute',
         },
         {
           path: '/system-mgmt/audit-logs',
           name: 'Audit Logs',
           component: './SystemMgmt/AuditLogs',
+          access: 'canAccessRoute',
         },
         {
           path: '/system-mgmt/system-settings',
           name: 'System Settings',
           component: './SystemMgmt/SystemSettings',
+          access: 'canAccessRoute',
         },
         {
           path: '/system-mgmt/sign-in-logs',
           name: 'Sign-in Logs',
           component: './SystemMgmt/SignInLogs',
+          access: 'canAccessRoute',
         },
       ],
     },
@@ -129,22 +140,24 @@ export default defineConfig({
           path: '/hr/departments',
           name: 'Department Management',
           component: './HumanResource/Departments',
+          access: 'canAccessRoute',
         },
         {
           path: '/hr/contracts',
           name: 'Contract Management',
           component: './HumanResource/Contracts',
+          access: 'canAccessRoute',
         },
         {
           path: '/hr/leave-types',
           name: 'Leave Settings',
           component: './HumanResource/LeaveTypes',
+          access: 'canAccessRoute',
         },
       ],
     },
 
-    // --- PHÂN HỆ TIME ATTENDANCE (5000) - CHUẨN ĐỊNH TUYẾN KHOA HỌC ---
-    // --- PHÂN HỆ WORK HOURS (5000) - BỘ TỪ VẬN HÀNH THỜI GIAN CHUẨN ---
+    // --- PHÂN HỆ WORK HOURS (5000) ---
     {
       path: '/work-hours',
       name: 'Work Hours',
@@ -158,39 +171,47 @@ export default defineConfig({
           path: '/work-hours/shift-setup',
           name: 'Shift Setup',
           component: './WorkHours/ShiftSetup',
+          access: 'canAccessRoute',
         },
         {
           path: '/work-hours/work-summary',
           name: 'Work Summary',
           component: './WorkHours/WorkSummary',
+          access: 'canAccessRoute',
         },
         {
           path: '/work-hours/machine-records',
           name: 'Machine Records',
           component: './WorkHours/MachineRecords',
+          access: 'canAccessRoute',
         },
         {
           path: '/work-hours/timeoff-requests',
           name: 'Time Off Requests',
           component: './WorkHours/TimeOffRequests',
+          access: 'canAccessRoute',
         },
         {
           path: '/work-hours/ot-registration',
           name: 'OT Registration',
           component: './WorkHours/OtRegistration',
+          access: 'canAccessRoute',
         },
         {
           path: '/work-hours/device-setup',
           name: 'Device Setup',
           component: './WorkHours/DeviceSetup',
+          access: 'canAccessRoute',
         },
         {
           path: '/work-hours/work-time-report',
           name: 'Work Time Report',
           component: './WorkHours/WorkTimeReport',
+          access: 'canAccessRoute',
         },
       ],
     },
+    { path: '/403', component: './403' },
     { path: '*', component: './404' },
   ],
   npmClient: 'npm',

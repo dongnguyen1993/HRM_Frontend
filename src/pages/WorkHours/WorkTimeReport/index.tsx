@@ -1,4 +1,5 @@
 import { BaseTable } from '@/components/BaseTable';
+import { PermissionGuard } from '@/components/PermissionGuard';
 import { TableFilterCard } from '@/components/TableFilterCard';
 import {
   BarChartOutlined,
@@ -362,14 +363,19 @@ export const WorkTimeReport: React.FC = () => {
                     queryFile="WorkHours/WorkTimeReport/WorkTimeReportQueries"
                     queryKey="GetPagedWorkTimeReport"
                     toolBarRender={() => [
-                      <Button
+                      <PermissionGuard
                         key="export-excel"
-                        icon={<DownloadOutlined />}
-                        onClick={handleExportExcel}
-                        style={{ fontWeight: 500 }}
+                        action="print"
+                        routePath="/work-hours/work-time-report"
                       >
-                        Xuất Báo Cáo Excel
-                      </Button>,
+                        <Button
+                          icon={<DownloadOutlined />}
+                          onClick={handleExportExcel}
+                          style={{ fontWeight: 500 }}
+                        >
+                          Xuất Báo Cáo Excel
+                        </Button>
+                      </PermissionGuard>,
                     ]}
                     request={async (params) => {
                       const res = await request<any>('/api/work-time-report', {

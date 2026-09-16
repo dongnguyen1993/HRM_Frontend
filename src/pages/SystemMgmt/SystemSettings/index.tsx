@@ -4,6 +4,7 @@ import {
   NumberOutlined,
   ReloadOutlined,
   SaveOutlined,
+  SendOutlined,
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import {
@@ -13,19 +14,22 @@ import {
   Form,
   Input,
   InputNumber,
+  Modal,
   Row,
   Space,
   Switch,
   Tabs,
   Typography,
 } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 import { useSystemSettings } from './hooks/useSystemSettings';
 
 const { Text } = Typography;
 
 export const SystemSettings: React.FC = () => {
-  const { loading, saving, config, form, fetchSettings, handleSave } = useSystemSettings();
+  const { loading, saving, testingEmail, config, form, fetchSettings, handleSave, handleTestEmail } = useSystemSettings();
+  const [testModalOpen, setTestModalOpen] = useState<boolean>(false);
+  const [testRecipientEmail, setTestRecipientEmail] = useState<string>('');
 
   return (
     <PageContainer
@@ -155,18 +159,32 @@ export const SystemSettings: React.FC = () => {
                         <Form.Item
                           label="Mật khẩu Ứng dụng SMTP"
                           name="smtpPassword"
-                          tooltip="Mật khẩu được bảo mật bằng mã hóa AES-256 trong CSDL"
+                          tooltip="Mật khẩu được mã hóa bảo mật chuẩn AES-256 trong CSDL. Để trống nếu muốn giữ nguyên mật khẩu hiện tại."
+                          extra={<Text type="secondary" style={{ fontSize: 12 }}>Để trống trường này nếu không muốn thay đổi mật khẩu SMTP đã lưu</Text>}
                         >
                           <Input.Password placeholder="••••••••••••" />
                         </Form.Item>
                       </Col>
                     </Row>
 
-                    <Row gutter={24}>
+                    <Row gutter={24} align="middle">
                       <Col span={12}>
-                        <Form.Item label="Kích hoạt Mã hóa SSL/TLS" name="enableSsl" valuePropName="checked">
+                        <Form.Item label="Kích hoạt Mã hóa SSL/TLS" name="enableSsl" valuePropName="checked" style={{ marginBottom: 0 }}>
                           <Switch checkedChildren="Bật SSL" unCheckedChildren="Tắt" />
                         </Form.Item>
+                      </Col>
+                      <Col span={12} style={{ textAlign: 'right' }}>
+                        <Button
+                          icon={<SendOutlined />}
+                          loading={testingEmail}
+                          onClick={() => {
+                            const currentSender = form.getFieldValue('smtpEmail') || '';
+                            setTestRecipientEmail(currentSender);
+                            setTestModalOpen(true);
+                          }}
+                        >
+                          Kiểm tra Kết nối SMTP
+                        </Button>
                       </Col>
                     </Row>
                   </div>
@@ -221,6 +239,38 @@ export const SystemSettings: React.FC = () => {
           )}
         </Form>
       </Card>
+
+      <Modal
+        title={
+          <span>
+            <SendOutlined style={{ color: '#00A651', marginRight: 8 }} />
+            Kiểm tra Kết nối Máy chủ Email (SMTP)
+          </span>
+        }
+        open={testModalOpen}
+        onCancel={() => setTestModalOpen(false)}
+        onOk={async () => {
+          await handleTestEmail(testRecipientEmail);
+          setTestModalOpen(false);
+        }}
+        okText="Gửi Email Thử Nghiệm"
+        cancelText="Hủy Bỏ"
+        confirmLoading={testingEmail}
+      >
+        <p style={{ color: '#555' }}>
+          Hệ thống sẽ thử kết nối tới máy chủ SMTP với thông số đã cấu hình và giải mã mật khẩu AES-256 để gửi 1 email thử nghiệm.
+        </p>
+        <div style={{ marginTop: 16 }}>
+          <label style={{ display: 'block', marginBottom: 6, fontWeight: 500 }}>
+            Địa chỉ Email nhận thư kiểm tra:
+          </label>
+          <Input
+            value={testRecipientEmail}
+            onChange={(e) => setTestRecipientEmail(e.target.value)}
+            placeholder="vd: admin@hansol.com"
+          />
+        </div>
+      </Modal>
     </PageContainer>
   );
 };

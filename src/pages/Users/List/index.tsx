@@ -1,4 +1,5 @@
 import { BaseTable } from '@/components/BaseTable';
+import { PermissionGuard } from '@/components/PermissionGuard';
 import { TableActionBar } from '@/components/TableActionBar';
 import { TableFilterCard } from '@/components/TableFilterCard';
 import {
@@ -7,7 +8,7 @@ import {
   UploadOutlined,
 } from '@ant-design/icons';
 import { PageContainer, ProColumns } from '@ant-design/pro-components';
-import { request } from '@umijs/max';
+import { history, request } from '@umijs/max';
 import { Button, Card, Col, Input, Select, Space, Tag } from 'antd';
 import React from 'react';
 import ImportModal from './components/ImportModal';
@@ -153,47 +154,39 @@ export const UserList: React.FC = () => {
           }}
           toolBarRender={() => [
             isFilteringDeleted ? (
-              <Button
-                key="restore"
-                icon={<UndoOutlined />}
-                disabled={selectedRowKeys.length === 0}
-                onClick={() => handleBulkDelete(1)}
-                style={{
-                  backgroundColor: '#52c41a',
-                  borderColor: '#52c41a',
-                  color: '#fff',
-                }}
-              >
-                BỎ XÓA ({selectedRowKeys.length})
-              </Button>
+              <PermissionGuard key="restore" action="delete" routePath="/system-mgmt/user-management">
+                <Button
+                  icon={<UndoOutlined />}
+                  disabled={selectedRowKeys.length === 0}
+                  onClick={() => handleBulkDelete(1)}
+                  style={{
+                    backgroundColor: '#52c41a',
+                    borderColor: '#52c41a',
+                    color: '#fff',
+                  }}
+                >
+                  BỎ XÓA ({selectedRowKeys.length})
+                </Button>
+              </PermissionGuard>
             ) : (
               <TableActionBar
                 key="actions"
+                routePath="/system-mgmt/user-management"
                 onAdd={handleAdd}
                 onEdit={handleEdit}
                 onDelete={() => handleBulkDelete(0)}
+                onExport={handleExportExcel}
                 addText="Thêm mới"
                 selectedCount={selectedRowKeys.length}
                 extraButtons={
-                  <>
+                  <PermissionGuard action="create" routePath="/system-mgmt/user-management">
                     <Button
                       icon={<UploadOutlined />}
-                      onClick={handleOpenImportModal}
+                      onClick={() => history.push('/system-mgmt/user-import')}
                     >
                       Nhập Excel
                     </Button>
-                    <Button
-                      icon={<DownloadOutlined />}
-                      onClick={handleExportExcel}
-                      style={{
-                        backgroundColor: '#00A651',
-                        borderColor: '#00A651',
-                        color: '#fff',
-                      }}
-                    >
-                      Xuất Excel
-                    </Button>
-                  </>
+                  </PermissionGuard>
                 }
               />
             ),

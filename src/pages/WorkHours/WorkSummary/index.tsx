@@ -1,4 +1,5 @@
 import { BaseTable } from '@/components/BaseTable';
+import { PermissionGuard } from '@/components/PermissionGuard';
 import { TableFilterCard } from '@/components/TableFilterCard';
 import {
   CheckCircleOutlined,
@@ -244,20 +245,21 @@ export const WorkSummary: React.FC = () => {
           queryFile="WorkHours/WorkSummary/WorkSummaryQueries"
           queryKey="GetPagedWorkSummary"
           toolBarRender={() => [
-            <Button
-              key="calculate-btn"
-              type="primary"
-              icon={<ThunderboltOutlined />}
-              onClick={handleOpenCalculate}
-              style={{
-                backgroundColor: '#faad14',
-                borderColor: '#faad14',
-                color: '#000',
-                fontWeight: 'bold',
-              }}
-            >
-              ⚡ Tính toán công (Calculate Engine)
-            </Button>,
+            <PermissionGuard key="calculate-btn" action="save" routePath="/work-hours/work-summary">
+              <Button
+                type="primary"
+                icon={<ThunderboltOutlined />}
+                onClick={handleOpenCalculate}
+                style={{
+                  backgroundColor: '#faad14',
+                  borderColor: '#faad14',
+                  color: '#000',
+                  fontWeight: 'bold',
+                }}
+              >
+                ⚡ Tính toán công (Calculate Engine)
+              </Button>
+            </PermissionGuard>,
           ]}
           request={async (params) => {
             const res = await request<any>('/api/work-summary', {

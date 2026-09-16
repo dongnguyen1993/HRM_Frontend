@@ -50,12 +50,39 @@ export function useSystemSettings() {
     }
   };
 
+  const [testingEmail, setTestingEmail] = useState<boolean>(false);
+
+  const handleTestEmail = async (targetEmail: string) => {
+    if (!targetEmail) {
+      message.warning('Vui lòng nhập địa chỉ email nhận thư kiểm tra');
+      return;
+    }
+    setTestingEmail(true);
+    try {
+      const res = await request<any>('/api/system-settings/test-email', {
+        method: 'POST',
+        data: { toEmail: targetEmail },
+      });
+      if (res && res.isSuccess) {
+        message.success('Kiểm tra kết nối SMTP thành công! Email đã được gửi.');
+      } else {
+        message.error(res?.message || 'Kiểm tra kết nối SMTP thất bại');
+      }
+    } catch (error: any) {
+      message.error(error?.data?.message || 'Không thể kết nối đến máy chủ SMTP. Kiểm tra lại thông số.');
+    } finally {
+      setTestingEmail(false);
+    }
+  };
+
   return {
     loading,
     saving,
+    testingEmail,
     config,
     form,
     fetchSettings,
     handleSave,
+    handleTestEmail,
   };
 }

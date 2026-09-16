@@ -1,3 +1,4 @@
+import { PermissionGuard } from '@/components/PermissionGuard';
 import {
   DownloadOutlined,
   PrinterOutlined,
@@ -207,17 +208,21 @@ export const MonthlyMatrixTab: React.FC<MonthlyMatrixTabProps> = ({
       }
       extra={
         <Space>
-          <Button icon={<PrinterOutlined />} onClick={() => window.print()}>
-            In Bảng Công
-          </Button>
-          <Button
-            type="primary"
-            icon={<DownloadOutlined />}
-            onClick={onExportExcel}
-            style={{ backgroundColor: '#00A651', borderColor: '#00A651' }}
-          >
-            Xuất Excel Chuẩn Hansol
-          </Button>
+          <PermissionGuard action="print" routePath="/work-hours/work-time-report">
+            <Button icon={<PrinterOutlined />} onClick={() => window.print()}>
+              In Bảng Công
+            </Button>
+          </PermissionGuard>
+          <PermissionGuard action="print" routePath="/work-hours/work-time-report">
+            <Button
+              type="primary"
+              icon={<DownloadOutlined />}
+              onClick={onExportExcel}
+              style={{ backgroundColor: '#00A651', borderColor: '#00A651' }}
+            >
+              Xuất Excel Chuẩn Hansol
+            </Button>
+          </PermissionGuard>
         </Space>
       }
     >

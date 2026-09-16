@@ -110,6 +110,35 @@ export async function downloadImportTemplate(): Promise<Blob> {
   });
 }
 
+export interface UserImportPreviewRow {
+  rowIndex: number;
+  userCode: string;
+  fullName: string;
+  email: string;
+  plant?: string;
+  groupName?: string;
+  comment?: string;
+  isValid: boolean;
+  errors: string[];
+}
+
+export interface UserImportPreviewResult {
+  totalRows: number;
+  validRowsCount: number;
+  errorRowsCount: number;
+  rows: UserImportPreviewRow[];
+}
+
+export async function previewImportUsers(file: File) {
+  const formData = new FormData();
+  formData.append('file', file);
+  return request<BaseResponse<UserImportPreviewResult>>('/api/users/import/preview', {
+    method: 'POST',
+    data: formData,
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+}
+
 export async function importUsers(file: File) {
   const formData = new FormData();
   formData.append('file', file);

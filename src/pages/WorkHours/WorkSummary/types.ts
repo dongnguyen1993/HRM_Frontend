@@ -1,8 +1,4 @@
-export interface BaseResponse<T> {
-  isSuccess: boolean;
-  message: string;
-  data: T;
-}
+export type { BaseResponse } from '@/types/api';
 
 export interface WorkSummaryItem {
   logId: number;

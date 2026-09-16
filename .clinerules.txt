@@ -1,0 +1,6 @@
+Dự án: Hệ thống Quản lý Nhân sự (HRM).
+- Backend: .NET 8 Web API, Entity Framework Core, SQL Server.
+- Frontend: React (Hooks, Component-based), Axios / React Query.
+- Nguyên tắc: 
+  + Luôn giữ nguyên kiến trúc phân tầng hiện tại.
+  + Trước khi sửa đổi hoặc viết code mới, hãy kiểm tra các file liên quan để đảm bảo tính nhất quán về naming convention và pattern.
